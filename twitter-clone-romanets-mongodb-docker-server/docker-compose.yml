@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    container_name: server-web-twitter-clone-romanets-mongodb
+    command: yarn dev
+    volumes:
+      - /app
+      - /app/node_modules
+    ports:
+      - "3023:4023"
+        # MongoDB services
+  mongo_db:
+    container_name: mongodb-twitter-clone-romanets-mongodb
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo_db:/data/db
+  api:
+    build: .
+    container_name: server-api-twitter-clone-romanets-mongodb
+    ports:
+      - "4023:3023"
+    environment:
+      PORT: 3023
+      MONGODB_URI: mongodb://mongo_db:27017/twitter
+      NAME: Aleksandr
+    depends_on:
+      - mongo_db  
+    volumes:
+      - /app
+      - /app/node_modules
+volumes:
+  mongo_db: {}
